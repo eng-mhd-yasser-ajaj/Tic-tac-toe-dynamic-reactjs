@@ -11,7 +11,8 @@ function XOGame(props) {
     const initialState = {
         history: [{squares: Array(SIZE*SIZE).fill(null)}],
         step:0,
-        xIsNext: true
+        xIsNext: true,
+        startAgain: false
     }
     const reducer = (state, action) => {
         switch(action.type) {
@@ -21,7 +22,8 @@ function XOGame(props) {
                 return { ...state,
                     history:history.concat([{squares: squares}]),
                     step: state.step + 1,
-                    xIsNext: !state.xIsNext
+                    xIsNext: !state.xIsNext,
+                    startAgain: false
                 }
             default: 
                 return state;
@@ -51,91 +53,19 @@ function XOGame(props) {
     return (
         <div>
             <Board size={SIZE}
-                squares={current.squares} 
+                squares={current.squares}
                 onClick={(i) => onClickHandler(i)}/>   
             <div>
                 {status}
             </div>
-            {/* <div>
-                {moves}
-            </div> */}
+            <div>
+                {status && String(status).startsWith('Winner')? <button onClick={props.onRestartClick}>Restart</button>: null}
+            </div>
         </div>
     );
 }
 
 export default XOGame;
-
-// class XOGame extends Component {
-//     constructor(props) {    
-//         super(props);
-//         this.state = {      
-//             history: [{squares: Array(props.size*props.size).fill(null)}],
-//             step:0,
-//             xIsNext: true
-//         };
-//     }
-
-//     // jumpTo(move) {
-//     //     this.setState({
-//     //         step:move,
-//     //         xIsNext: (move%2) === 0
-//     //     })
-//     // }
-
-//     onClickHandler(i) {
-//         const step = this.state.step
-//         const history = this.state.history.slice(0,step+1);
-//         const squares = history[history.length-1].squares;
-//         if (squares[i] || calculateWinner(squares,this.props.size)) {
-//             return;
-//         }
-//         squares[i] = this.state.xIsNext? 'X' : 'O'
-//         this.setState({
-//             history:history.concat([{squares: squares}]),
-//             step: step + 1,
-//             xIsNext: !this.state.xIsNext
-//         })
-        
-//     }
-    
-//     render() {
-//         const history = this.state.history;
-//         const current = history[this.state.step];    
-//         const winner = calculateWinner(current.squares,this.props.size);    
-//         let status;    
-//         if (winner) {
-//             status = 'Winner: ' + winner;    
-//         } else { 
-//             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');    
-//         }
-
-//         // const moves = history.map((step, move) => {      
-//         //     const desc = move ?        
-//         //     'Go to move #' + move :        
-//         //     'Go to game start';      
-//         //     return (        
-//         //         <li key={move}>          
-//         //             <button onClick={() => this.jumpTo(move)}>{desc}</button>        
-//         //         </li>      
-//         //     );   
-//         //  });
-
-//         return (
-//             <div>
-//                 <Board size={this.props.size}
-//                     squares={current.squares} 
-//                     onClick={(i) =>this.onClickHandler(i)}/>   
-//                 <div>
-//                     {status}
-//                 </div>
-//                 {/* <div>
-//                     {moves}
-//                 </div> */}
-//             </div>
-//         );
-//     }
-
-// }
 
 function calculateWinner(squares,size) {
     let leftRight = Array(2).fill(true)
@@ -172,5 +102,3 @@ function calculateWinner(squares,size) {
     }
     return null;
 }
-
-// export default XOGame;

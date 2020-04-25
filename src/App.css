@@ -14,6 +14,10 @@
   margin: auto;
 }
 
+.error-class {
+  color: red;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
